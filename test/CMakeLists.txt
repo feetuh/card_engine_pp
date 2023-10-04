@@ -25,7 +25,16 @@ target_link_libraries(
 )
 target_compile_features(card_engine_pp_test PRIVATE cxx_std_20)
 
+add_executable(card_test source/card_test.cpp)
+target_link_libraries(
+    card_test PRIVATE
+    card_engine_pp::card_engine_pp
+    Catch2::Catch2WithMain
+)
+target_compile_features(card_test PRIVATE cxx_std_20)
+
 catch_discover_tests(card_engine_pp_test)
+catch_discover_tests(card_test)
 
 # ---- End-of-file commands ----
 

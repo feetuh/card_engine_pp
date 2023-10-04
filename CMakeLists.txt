@@ -6,7 +6,7 @@ project(
     card_engine_pp
     VERSION 0.1.0
     DESCRIPTION "Short description"
-    HOMEPAGE_URL "https://example.com/"
+    HOMEPAGE_URL "https://github.com/feetuh/card_engine_pp"
     LANGUAGES CXX
 )
 
