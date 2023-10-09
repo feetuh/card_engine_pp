@@ -10,7 +10,7 @@ auto board::add_site(site target,
 {
   const auto added_it =
       m_sites.emplace(std::move(site_name), std::move(target));
-  if (added_it.second) {
+  if (!added_it.second) {
     throw std::runtime_error {
         fmt::format("Encountered duplicate site: {}", site_name)};
   }

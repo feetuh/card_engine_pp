@@ -34,3 +34,13 @@ TEST_CASE("Can add to group", "[library]")
   REQUIRE(state.m_group_to_sites.find("players")
           != state.m_group_to_sites.end());
 }
+
+TEST_CASE("Can't add duplicate site", "[library]")
+{
+  site hand;
+  hand.m_cards.emplace_back(suit::spade, rank::ace);
+
+  board state;
+  state.add_site(hand, "hand", "players");
+  REQUIRE_THROWS(state.add_site(std::move(hand), "hand"));
+}
