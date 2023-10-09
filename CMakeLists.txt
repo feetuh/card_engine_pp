@@ -18,6 +18,7 @@ include(cmake/variables.cmake)
 add_library(
     card_engine_pp_card_engine_pp
     source/card_engine_pp.cpp
+    source/board.cpp
 )
 add_library(card_engine_pp::card_engine_pp ALIAS card_engine_pp_card_engine_pp)
 
