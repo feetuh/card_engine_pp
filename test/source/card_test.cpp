@@ -11,6 +11,6 @@ TEST_CASE("Can create card", "[library]")
   using card_engine_pp::suit;
 
   card_engine_pp::card card_1 {suit::spade, rank::ace};
-  REQUIRE(card_1.get_suit() == suit::spade);
-  REQUIRE(card_1.get_rank() == rank::ace);
+  REQUIRE(card_1.m_suit == suit::spade);
+  REQUIRE(card_1.m_rank == rank::ace);
 }

@@ -43,21 +43,21 @@ struct card
   explicit card(suit card_suit,
                 rank card_rank,
                 direction card_dir = direction::up)
-      : suit(card_suit)
-      , rank(card_rank)
-      , dir(card_dir)
+      : m_suit(card_suit)
+      , m_rank(card_rank)
+      , m_dir(card_dir)
   {
   }
 
   auto operator==(const card& other) const -> bool
   {
     // note: eq ignores direction
-    return suit == other.suit && rank == other.rank;
+    return m_suit == other.m_suit && m_rank == other.m_rank;
   }
 
-  enum suit suit;
-  enum rank rank;
-  enum direction dir;
+  enum suit m_suit;
+  enum rank m_rank;
+  enum direction m_dir;
 };
 
 }  // namespace card_engine_pp
@@ -71,8 +71,8 @@ struct hash<card_engine_pp::card>
   auto operator()(const card_engine_pp::card& card) const -> size_t
   {
     // note: hash ignores direction
-    size_t hash_1 = hash<int> {}(static_cast<int>(card.rank));
-    const size_t hash_2 = hash<int> {}(static_cast<int>(card.suit));
+    size_t hash_1 = hash<int> {}(static_cast<int>(card.m_rank));
+    const size_t hash_2 = hash<int> {}(static_cast<int>(card.m_suit));
     boost::hash_combine(hash_1, hash_2);
     return hash_1;
   }

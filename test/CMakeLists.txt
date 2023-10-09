@@ -33,8 +33,17 @@ target_link_libraries(
 )
 target_compile_features(card_test PRIVATE cxx_std_20)
 
+add_executable(board_test source/board_test.cpp)
+target_link_libraries(
+    board_test PRIVATE
+    card_engine_pp::card_engine_pp
+    Catch2::Catch2WithMain
+)
+target_compile_features(board_test PRIVATE cxx_std_20)
+
 catch_discover_tests(card_engine_pp_test)
 catch_discover_tests(card_test)
+catch_discover_tests(board_test)
 
 # ---- End-of-file commands ----
 
