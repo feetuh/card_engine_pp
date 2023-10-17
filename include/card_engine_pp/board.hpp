@@ -19,7 +19,7 @@ struct board
                 std::string site_name,
                 std::optional<std::string> group_name = std::nullopt) -> void;
 
-  std::map<std::string, site> m_sites;
+  std::map<std::string, site, std::less<>> m_sites;
   std::map<std::string, std::vector<site*>> m_group_to_sites;
 };
 
