@@ -1,28 +1,36 @@
 #include "card_engine_pp/operation.hpp"
 
 using card_engine_pp::card_vec_it;
+using card_engine_pp::op_move_cards;
 
-auto card_engine_pp::move_cards(board& state,
-                                const std::string& from_site,
-                                const std::vector<card_vec_it>& cards,
-                                const std::string& to_site) -> void
+op_move_cards::op_move_cards(std::shared_ptr<board> state,
+                             std::string from_site,
+                             std::vector<card_vec_it> cards,
+                             std::string to_site)
+    : m_state(std::move(state))
+    , m_site(std::move(from_site))
+    , m_cards(std::move(cards))
+    , m_to_site(std::move(to_site))
 {
-  const auto found_from_it = state.m_sites.find(from_site);
-  if (found_from_it == std::end(state.m_sites)) {
-    // err
-    return;
+}
+
+auto op_move_cards::op_move_cards::operator()() -> bool
+{
+  const auto found_from_it = m_state->m_sites.find(m_site);
+  if (found_from_it == std::end(m_state->m_sites)) {
+    return false;
   }
 
-  const auto found_to_it = state.m_sites.find(to_site);
-  if (found_to_it == std::end(state.m_sites)) {
-    // err
-    return;
+  const auto found_to_it = m_state->m_sites.find(m_to_site);
+  if (found_to_it == std::end(m_state->m_sites)) {
+    return false;
   }
 
   auto& from_cards = found_from_it->second.m_cards;
 
-  for (const auto& card_it : cards) {
+  for (const auto& card_it : m_cards) {
     found_to_it->second.m_cards.emplace_back(*card_it);
     from_cards.erase(card_it);
   }
+  return true;
 }

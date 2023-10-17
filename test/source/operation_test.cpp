@@ -6,7 +6,7 @@
 
 using card_engine_pp::board;
 using card_engine_pp::card;
-using card_engine_pp::move_cards;
+using card_engine_pp::op_move_cards;
 using card_engine_pp::rank;
 using card_engine_pp::site;
 using card_engine_pp::suit;
@@ -17,15 +17,16 @@ TEST_CASE("Can move cards", "[library]")
   site hand;
   hand.m_cards.emplace_back(ace_of_spades);
 
-  board state;
-  state.add_site(hand, "my_hand", "players");
-  state.add_site(site {}, "other_hand", "players");
+  auto state = std::make_shared<board>();
+  state->add_site(hand, "my_hand", "players");
+  state->add_site(site {}, "other_hand", "players");
 
-  auto my_hand = state.m_sites.find("my_hand");
+  auto my_hand = state->m_sites.find("my_hand");
   auto my_card = my_hand->second.m_cards.begin();
-  move_cards(state, "my_hand", {my_card}, "other_hand");
 
-  auto other_hand = state.m_sites.find("other_hand");
+  op_move_cards {state, "my_hand", {my_card}, "other_hand"}();
+
+  auto other_hand = state->m_sites.find("other_hand");
   auto& other_cards = other_hand->second.m_cards;
 
   REQUIRE(other_cards.size() == 1);

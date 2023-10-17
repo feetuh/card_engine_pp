@@ -9,9 +9,21 @@ namespace card_engine_pp
 
 using card_vec_it = std::vector<card>::iterator;
 
-auto move_cards(board& state,
-                const std::string& from_site,
-                const std::vector<card_vec_it>& cards,
-                const std::string& to_site) -> void;
+class op_move_cards
+{
+public:
+  explicit op_move_cards(std::shared_ptr<board> state,
+                         std::string from_site,
+                         std::vector<card_vec_it> cards,
+                         std::string to_site);
+
+  auto operator()() -> bool;
+
+private:
+  std::shared_ptr<board> m_state;
+  std::string m_site;
+  std::vector<card_vec_it> m_cards;
+  std::string m_to_site;
+};
 
 }  // namespace card_engine_pp
