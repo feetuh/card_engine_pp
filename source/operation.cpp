@@ -34,3 +34,20 @@ auto op_move_cards::op_move_cards::operator()() -> bool
   }
   return true;
 }
+
+auto op_move_cards::state() const -> const std::shared_ptr<board>&
+{
+  return m_state;
+}
+auto op_move_cards::site() const -> const std::string&
+{
+  return m_site;
+}
+auto op_move_cards::cards() const -> const std::vector<card_vec_it>&
+{
+  return m_cards;
+}
+auto op_move_cards::to_site() const -> const std::string&
+{
+  return m_to_site;
+}

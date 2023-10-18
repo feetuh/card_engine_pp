@@ -19,6 +19,11 @@ public:
 
   auto operator()() -> bool;
 
+  auto state() const -> const std::shared_ptr<board>&;
+  auto site() const -> const std::string&;
+  auto cards() const -> const std::vector<card_vec_it>&;
+  auto to_site() const -> const std::string&;
+
 private:
   std::shared_ptr<board> m_state;
   std::string m_site;
