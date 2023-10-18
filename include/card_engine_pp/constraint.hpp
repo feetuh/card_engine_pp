@@ -44,6 +44,15 @@ struct any_number
   static auto conforms(const std::vector<card_vec_it>& targets) -> bool;
 };
 
+template<int N>
+struct n_cards
+{
+  static auto conforms(const std::vector<card_vec_it>& targets) -> bool
+  {
+    return targets.size() == N;
+  }
+};
+
 // CardConstraint
 // AnyOf
 // OneOf
