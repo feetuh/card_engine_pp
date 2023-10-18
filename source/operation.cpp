@@ -14,7 +14,7 @@ op_move_cards::op_move_cards(std::shared_ptr<board> state,
 {
 }
 
-auto op_move_cards::op_move_cards::operator()() -> bool
+auto op_move_cards::op_move_cards::operator()() const -> bool
 {
   const auto found_from_it = m_state->m_sites.find(m_site);
   if (found_from_it == std::end(m_state->m_sites)) {

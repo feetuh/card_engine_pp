@@ -33,7 +33,7 @@ namespace constraints
 template<typename NumberOfCards>
 struct move_cards
 {
-  auto operator()(const op_move_cards& operation) -> bool
+  auto operator()(const op_move_cards& operation) const -> bool
   {
     return NumberOfCards::conforms(operation.cards());
   }

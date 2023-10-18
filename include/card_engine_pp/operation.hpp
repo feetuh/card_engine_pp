@@ -17,7 +17,7 @@ public:
                          std::vector<card_vec_it> cards,
                          std::string to_site);
 
-  auto operator()() -> bool;
+  auto operator()() const -> bool;
 
   auto state() const -> const std::shared_ptr<board>&;
   auto site() const -> const std::string&;
