@@ -20,6 +20,7 @@ add_library(
     source/card_engine_pp.cpp
     source/board.cpp
     source/operation.cpp
+    source/constraint.cpp
 )
 add_library(card_engine_pp::card_engine_pp ALIAS card_engine_pp_card_engine_pp)
 

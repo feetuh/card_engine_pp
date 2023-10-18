@@ -49,10 +49,19 @@ target_link_libraries(
 )
 target_compile_features(operation_test PRIVATE cxx_std_20)
 
+add_executable(constraint_test source/constraint_test.cpp)
+target_link_libraries(
+    constraint_test PRIVATE
+    card_engine_pp::card_engine_pp
+    Catch2::Catch2WithMain
+)
+target_compile_features(constraint_test PRIVATE cxx_std_20)
+
 catch_discover_tests(card_engine_pp_test)
 catch_discover_tests(card_test)
 catch_discover_tests(board_test)
 catch_discover_tests(operation_test)
+catch_discover_tests(constraint_test)
 
 # ---- End-of-file commands ----
 
