@@ -38,14 +38,25 @@ enum class direction
   down,
 };
 
+class card_id_generator
+{
+public:
+  auto next() -> uint8_t { return m_id++; }
+
+private:
+  uint8_t m_id = 0;
+};
+
 struct card
 {
   explicit card(suit card_suit,
                 rank card_rank,
+                card_id_generator& generator,
                 direction card_dir = direction::up)
       : m_suit(card_suit)
       , m_rank(card_rank)
       , m_dir(card_dir)
+      , m_id(generator.next())
   {
   }
 
@@ -58,6 +69,7 @@ struct card
   enum suit m_suit;
   enum rank m_rank;
   enum direction m_dir;
+  uint8_t m_id;
 };
 
 }  // namespace card_engine_pp

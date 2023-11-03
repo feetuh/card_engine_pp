@@ -30,24 +30,15 @@ using card_vec_it = std::vector<card>::iterator;
 namespace constraints
 {
 
-template<typename NumberOfCards>
-struct move_cards
-{
-  auto operator()(const op_move_cards& operation) const -> bool
-  {
-    return NumberOfCards::conforms(operation.cards());
-  }
-};
-
 struct any_number
 {
-  static auto conforms(const std::vector<card_vec_it>& targets) -> bool;
+  static auto conforms(const std::vector<const card*>& targets) -> bool;
 };
 
 template<int N>
 struct n_cards
 {
-  static auto conforms(const std::vector<card_vec_it>& targets) -> bool
+  static auto conforms(const std::vector<const card*>& targets) -> bool
   {
     return targets.size() == N;
   }
@@ -61,6 +52,22 @@ struct n_cards
 // HigherThan
 // LowerThan
 // Or (combination)
+
+struct any_card
+{
+  static auto conforms(const std::vector<const card*>& targets) -> bool;
+};
+
+template<suit S>
+struct matches_suit
+{
+  static auto conforms(const std::vector<const card*>& targets) -> bool
+  {
+    return std::all_of(targets.begin(),
+                       targets.end(),
+                       [](const auto& target) { return target->m_suit == S; });
+  }
+};
 
 // {FromConstraint}
 // FromCurrentPlayer
@@ -112,6 +119,32 @@ struct n_cards
 // move n_card (any)
 // move card (specific)
 // move n_card (specific)
+
+template<typename CountConstraint, typename CardConstraint = any_card>
+struct move_cards
+{
+  auto operator()(const op_move_cards& operation) const -> bool
+  {
+    const auto& sites = operation.state()->m_sites;
+    auto site = sites.find(operation.site());
+    if (site == sites.end()) {
+      // TODO: use custom exceptions
+      throw std::runtime_error("Invalid operation, site not found: "
+                               + operation.site());
+    }
+    std::vector<const card*> cards;
+    const auto& card_ids = operation.card_ids();
+    for (const auto& current : site->second.m_cards) {
+      if (std::find(card_ids.begin(), card_ids.end(), current.m_id)
+          != card_ids.end())
+      {
+        cards.push_back(&current);
+      }
+    }
+
+    return CountConstraint::conforms(cards) && CardConstraint::conforms(cards);
+  }
+};
 
 }  // namespace constraints
 

@@ -1,15 +1,19 @@
+#include <algorithm>
+
 #include "card_engine_pp/operation.hpp"
+
+#include <bits/ranges_util.h>
 
 using card_engine_pp::card_vec_it;
 using card_engine_pp::op_move_cards;
 
 op_move_cards::op_move_cards(std::shared_ptr<board> state,
                              std::string from_site,
-                             std::vector<card_vec_it> cards,
+                             std::vector<uint8_t> card_ids,
                              std::string to_site)
     : m_state(std::move(state))
     , m_site(std::move(from_site))
-    , m_cards(std::move(cards))
+    , m_card_ids(std::move(card_ids))
     , m_to_site(std::move(to_site))
 {
 }
@@ -28,10 +32,18 @@ auto op_move_cards::op_move_cards::operator()() const -> bool
 
   auto& from_cards = found_from_it->second.m_cards;
 
-  for (const auto& card_it : m_cards) {
+  std::vector<card_vec_it> card_its;
+
+  auto card_it = from_cards.begin();
+  while (card_it != from_cards.end()) {
+    if (std::ranges::find(m_card_ids, card_it->m_id) == m_card_ids.end()) {
+      card_it++;
+      continue;
+    }
     found_to_it->second.m_cards.emplace_back(*card_it);
-    from_cards.erase(card_it);
+    card_it = from_cards.erase(card_it);
   }
+
   return true;
 }
 
@@ -43,9 +55,9 @@ auto op_move_cards::site() const -> const std::string&
 {
   return m_site;
 }
-auto op_move_cards::cards() const -> const std::vector<card_vec_it>&
+auto op_move_cards::card_ids() const -> const std::vector<uint8_t>&
 {
-  return m_cards;
+  return m_card_ids;
 }
 auto op_move_cards::to_site() const -> const std::string&
 {
