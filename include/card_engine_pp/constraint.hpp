@@ -1,8 +1,11 @@
 #pragma once
 
+#include <string_view>
+
 #include "card_engine_pp/board.hpp"
 #include "card_engine_pp/card.hpp"
 #include "card_engine_pp/operation.hpp"
+#include "card_engine_pp/util.hpp"
 
 // there needs to be a system for validators that describe generic moves
 // MoveCards<1, CardConstraint, FromConstraint_1, ToConstraint2>(from, to);
@@ -77,6 +80,24 @@ struct matches_suit
 // FromOneOf<>
 // FromAnyOf<>
 
+struct any_site
+{
+  static auto conforms(const std::string_view site_name) -> bool
+  {
+    (void)site_name;
+    return true;
+  }
+};
+
+template<string_literal Site>
+struct matches_site
+{
+  static auto conforms(const std::string_view site_name) -> bool
+  {
+    return site_name == Site.value;
+  }
+};
+
 // {ToConstraint}
 // ToCurrentPlayer
 // ToAnyPlayer
@@ -120,7 +141,9 @@ struct matches_suit
 // move card (specific)
 // move n_card (specific)
 
-template<typename CountConstraint, typename CardConstraint = any_card>
+template<typename CountConstraint,
+         typename CardConstraint = any_card,
+         typename FromConstraint = any_site>
 struct move_cards
 {
   auto operator()(const op_move_cards& operation) const -> bool
@@ -142,7 +165,8 @@ struct move_cards
       }
     }
 
-    return CountConstraint::conforms(cards) && CardConstraint::conforms(cards);
+    return CountConstraint::conforms(cards) && CardConstraint::conforms(cards)
+        && FromConstraint::conforms(operation.site());
   }
 };
 

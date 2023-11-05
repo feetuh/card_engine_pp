@@ -4,6 +4,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include "card_engine_pp/util.hpp"
+
 using card_engine_pp::board;
 using card_engine_pp::card;
 using card_engine_pp::card_id_generator;
@@ -93,6 +95,32 @@ TEST_CASE(
 
   REQUIRE(move_cards<card_engine_pp::constraints::any_number,
                      card_engine_pp::constraints::matches_suit<
-                         card_engine_pp::suit::spade>>()(operation)
+                         card_engine_pp::suit::spade>,
+                     card_engine_pp::constraints::any_site>()(operation)
+          == true);
+}
+
+TEST_CASE(
+    "Constraint for moving one suited card for any_number, matches_suit and "
+    "site conforms",
+    "[library]")
+{
+  card_id_generator generator;
+  card ace_of_spades {suit::spade, rank::ace, generator};
+  site hand;
+  hand.m_cards.emplace_back(ace_of_spades);
+
+  auto state = std::make_shared<board>();
+  state->add_site(hand, "my_hand", "players");
+  state->add_site(site {}, "other_hand", "players");
+
+  op_move_cards operation {state, "my_hand", {0}, "other_hand"};
+
+  constexpr card_engine_pp::string_literal from_hand {"my_hand"};
+  REQUIRE(move_cards<card_engine_pp::constraints::any_number,
+                     card_engine_pp::constraints::matches_suit<
+                         card_engine_pp::suit::spade>,
+                     card_engine_pp::constraints::matches_site<from_hand>>()(
+              operation)
           == true);
 }
